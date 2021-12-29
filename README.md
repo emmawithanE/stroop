@@ -1,2 +1,2 @@
 # stroop
-Unity Stroop Test game
+Asset files for a simple Stroop Test, built in Unity.
