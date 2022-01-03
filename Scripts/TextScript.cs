@@ -25,6 +25,10 @@ public class TextScript : MonoBehaviour
 
     string correct_guess = "";
 
+    public Text time_display;
+    float timer = 0f;
+    public bool game_running = true;
+
     void RerollColour()
     {
         int name_index = Random.Range(0, colour_options.Count);
@@ -33,7 +37,7 @@ public class TextScript : MonoBehaviour
         do
         {
             colour_index = Random.Range(0, colour_options.Count);
-        } 
+        }
         while (colour_index == name_index);
 
         GetComponent<Text>().text = colour_options[name_index].name;
@@ -54,15 +58,36 @@ public class TextScript : MonoBehaviour
         RerollColour();
     }
 
+    // Update is called every frame, if the MonoBehaviour is enabled.
+    void Update()
+    {
+        if (game_running)
+        {
+            timer += Time.deltaTime;
+        }
+        time_display.text = $"{Mathf.FloorToInt(timer / 60)}:{Mathf.FloorToInt(timer % 60):D2}";
+    }
+
     // Given a "guess" from a button, regenerates the text.
     public void Guess(string input) 
     {
+        if (!game_running)
+        {
+            return; 
+        }
+        
         // If guess is correct (text matches the current text), increment correct
         // Increment guesses either way
         guesses++;
         if (input == correct_guess)
         {
             correct++;
+        }
+
+        // Stop timer at 20 guesses
+        if (guesses == 20)
+        {
+            game_running = false;
         }
 
         // Update displayed score in child object
