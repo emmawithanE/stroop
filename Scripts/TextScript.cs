@@ -19,6 +19,10 @@ public class TextScript : MonoBehaviour
 {
     List<ColourPair> colour_options = new List<ColourPair>();
 
+    public Text guess_display;
+    int guesses = 0;
+    int correct = 0;
+
     string correct_guess = "";
 
     void RerollColour()
@@ -29,7 +33,7 @@ public class TextScript : MonoBehaviour
         do
         {
             colour_index = Random.Range(0, colour_options.Count);
-        }
+        } 
         while (colour_index == name_index);
 
         GetComponent<Text>().text = colour_options[name_index].name;
@@ -45,12 +49,25 @@ public class TextScript : MonoBehaviour
         colour_options.Add(new ColourPair("Red", Color.red));
         colour_options.Add(new ColourPair("Green", Color.green));
 
+        guess_display.text = $"{correct}/{guesses}";
+
         RerollColour();
     }
 
     // Given a "guess" from a button, regenerates the text.
     public void Guess(string input) 
     {
+        // If guess is correct (text matches the current text), increment correct
+        // Increment guesses either way
+        guesses++;
+        if (input == correct_guess)
+        {
+            correct++;
+        }
+
+        // Update displayed score in child object
+        guess_display.text = $"{correct}/{guesses}";
+
         RerollColour();
     }
 }
