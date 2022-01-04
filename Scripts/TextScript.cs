@@ -27,7 +27,7 @@ public class TextScript : MonoBehaviour
 
     public Text time_display;
     float timer = 0f;
-    public bool game_running = true;
+    public static bool game_running = true;
 
     void RerollColour()
     {

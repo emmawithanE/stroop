@@ -16,6 +16,13 @@ public class ButtonScript : MonoBehaviour
         textbox.text = txt;
     }
 
+    /// Update is called every frame, if the MonoBehaviour is enabled.
+    void Update()
+    {
+        // Button's interactivity should match current state of game_running
+        GetComponent<Button>().interactable = TextScript.game_running;
+    }
+
     // Run from outside to change button text
     public void ChangeText(string input)
     {
