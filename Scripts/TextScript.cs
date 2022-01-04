@@ -29,6 +29,19 @@ public class TextScript : MonoBehaviour
     float timer = 0f;
     public static bool game_running = true;
 
+    public GameObject end_screen;
+    public Text end_time;
+    public Text end_guesses;
+
+
+    public void ResetGame()
+    {
+        guesses = 0;
+        correct = 0;
+        game_running = true;
+        timer = 0;
+    }
+
     void RerollColour()
     {
         int name_index = Random.Range(0, colour_options.Count);
@@ -45,6 +58,23 @@ public class TextScript : MonoBehaviour
         correct_guess = colour_options[colour_index].name;
     }
 
+    string FormattedTime() {
+        return $"{Mathf.FloorToInt(timer / 60)}:{Mathf.FloorToInt(timer * 10 % 600)/10.0f:00.0}";
+    }
+
+    string FormattedGuesses() {
+        return $"{correct}/{guesses}";
+    }
+
+    // Run when the game reaches 20 guesses made
+    void EndGame() {
+        game_running = false;
+
+        end_screen.SetActive(true);
+        end_time.text = FormattedTime();
+        end_guesses.text = FormattedGuesses();
+    }
+
     // Start is called before the first frame update
     void Start() 
     {
@@ -53,8 +83,7 @@ public class TextScript : MonoBehaviour
         colour_options.Add(new ColourPair("Red", Color.red));
         colour_options.Add(new ColourPair("Green", Color.green));
 
-        guess_display.text = $"{correct}/{guesses}";
-
+        ResetGame();
         RerollColour();
     }
 
@@ -65,7 +94,7 @@ public class TextScript : MonoBehaviour
         {
             timer += Time.deltaTime;
         }
-        time_display.text = $"{Mathf.FloorToInt(timer / 60)}:{Mathf.FloorToInt(timer % 60):D2}";
+        time_display.text = FormattedTime();
     }
 
     // Given a "guess" from a button, regenerates the text.
@@ -87,12 +116,14 @@ public class TextScript : MonoBehaviour
         // Stop timer at 20 guesses
         if (guesses == 20)
         {
-            game_running = false;
+            EndGame();
+        }
+        else
+        {
+            RerollColour();
         }
 
         // Update displayed score in child object
-        guess_display.text = $"{correct}/{guesses}";
-
-        RerollColour();
+        guess_display.text = FormattedGuesses();
     }
 }
